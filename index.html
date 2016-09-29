@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <title>Data Viz</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="js/history.js"></script>
+
+</head>
+<body>
+  <div id="data-wrap" class="wrapper">
+		<div id="titlewrap">
+    	<h1>Alta Snowfall Data Visualization<br><small>By Matt Rider</small></h1>
+			<p id="description">
+				The following graphs are two simple visualizations of Alta Ski Resort's historic snowfall data.
+				The dataset used contains the monthly and total snowfall amounts for each season (November - April)
+				between 1990 and 2015. Both charts were built with <a href="http://chartjs.org" target="_blank">Chart.js</a>.
+			</p>
+		</div>
+		<div id="line-wrapper" class="contentwrap">
+			<h2>Monthly snowfall by season</h2>
+	    <button class="btn btn-default" onclick="showLineChart()"><span class="fa fa-cloud"></span> show all seasons</button>
+	    <button class="btn btn-default" onclick="showLineChart(0,10)">90's snowfall</button>
+	    <button class="btn btn-default" onclick="showLineChart(10,20)">'00-'09 snowfall</button>
+	    <button class="btn btn-default" onclick="showLineChart(20, 25)">'10-'15 snowfall</button>
+			<!-- <button class="btn btn-default"onclick="getBarLabels()">test</button> -->
+	    <div id="line-box" class="databox">
+	      <canvas id="myLineChart" class="graph"></canvas>
+	    </div>
+		</div>
+		<div id="bar-wrapper" class="contentwrap">
+			<h2>Total snowfall by season</h2>
+			<button class="btn btn-default" onclick="showBarChart()"><span class="fa fa-cloud"></span> show totals</button>
+			<div id="bar-box" class="databox">
+	      <canvas id="myBarChart" class="graph"></canvas>
+	    </div>
+		</div>
+  </div>
+  <script>
+      var showLineChart = function(beg, end) {
+          var data = {
+            labels: ["November", "December", "January", "February", "March", "April"],
+            datasets: getLineDatasets(beg, end)
+          };
+          var ctx = document.getElementById("myLineChart").getContext("2d");
+          var myNewChart = new Chart(ctx).Line(data, {
+								bezierCurve: false,
+								multiTooltipTemplate: "<%= datasetLabel %>:  <%= value %>",
+								scaleOverride: true,
+								scaleSteps : 10,
+				        scaleStepWidth : 25,
+				        scaleStartValue : 0
+							});
+      };
+
+			var showBarChart = function () {
+					var data = {
+						labels: getBarLabels(),
+						datasets: [getSeasonBarData()]
+					}
+					var ctx = $("#myBarChart").get(0).getContext("2d");
+					var myNewChart = new Chart(ctx).Bar(data, {barStrokeWidth: 3});
+			};
+  </script>
+</body>
+</html>
